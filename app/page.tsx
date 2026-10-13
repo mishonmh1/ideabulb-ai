@@ -1,103 +1,77 @@
+
 "use client";
 
-import { useState } from "react";
-
-const features = [
-  {
-    title: "Think",
-    description: "Ask better questions. Explore deeper ideas.",
-    icon: "✦",
-    accent: "purple",
-  },
-  {
-    title: "Learn",
-    description: "Grow your knowledge. Build new skills.",
-    icon: "◫",
-    accent: "gold",
-  },
-  {
-    title: "Create",
-    description: "Bring your ideas to life. Make an impact.",
-    icon: "✎",
-    accent: "teal",
-  },
-  {
-    title: "Ministry",
-    description: "Faith in action. Ideas for a more just world.",
-    icon: "♡",
-    accent: "rose",
-  },
-];
+import { FormEvent, useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function Home() {
   const [idea, setIdea] = useState("");
+  const [error, setError] = useState("");
+  const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
 
-    if (!idea.trim()) return;
+    const question = idea.trim();
 
-    alert(`Your idea: ${idea}`);
-  };
+    if (!question) {
+      setError("Start with a question or idea you'd like to explore.");
+      return;
+    }
+
+    try {
+      sessionStorage.setItem("ideabulb_home_idea", question);
+      router.push("/think");
+    } catch {
+      setError("Please allow session storage in your browser and try again.");
+    }
+  }
 
   return (
-    <main className="min-h-screen overflow-hidden bg-[#faf9f6] text-[#151827]">
+    <main className="min-h-screen overflow-hidden bg-[#f8f5ed] text-[#14213d]">
       {/* Navigation */}
-      <nav className="relative z-20 flex items-center justify-between px-6 py-6 md:px-12">
-        <div className="flex items-center gap-3">
-          {/* Small bulb logo */}
-          <div className="relative flex h-12 w-10 items-center justify-center">
-            <div className="absolute h-9 w-7 rounded-[50%] border-[3px] border-[#d99b08]" />
-            <div className="absolute h-5 w-1 border-x-[3px] border-[#d99b08]" />
-            <div className="absolute bottom-0 h-2 w-6 rounded-b-md border-b-[3px] border-[#d99b08]" />
-            <div className="absolute h-5 w-[3px] bg-[#d99b08]" />
-            <div className="absolute h-[3px] w-5 bg-[#d99b08]" />
-          </div>
+      <header className="relative z-20 mx-auto flex max-w-[1500px] items-center justify-between gap-4 px-5 py-5 sm:px-8 lg:px-12">
+        <Link href="/" className="flex shrink-0 items-center gap-3">
+          <BulbLogo />
 
-          <div>
-            <div className="text-xl font-semibold tracking-[0.12em] md:text-2xl">
-              IDEA<span className="text-[#c9900a]">BULB</span>.AI
-            </div>
-            <div className="hidden text-[9px] tracking-[0.35em] text-slate-500 sm:block">
+          <span>
+            <span className="block text-lg font-black tracking-[0.08em] sm:text-2xl">
+              IDEA<span className="text-[#d6a72c]">BULB</span>.AI
+            </span>
+
+            <span className="block text-[8px] tracking-[0.23em] text-[#52627d] sm:text-[10px]">
               THINK BEYOND THE PROMPT.
-            </div>
-          </div>
-        </div>
+            </span>
+          </span>
+        </Link>
 
-        <div className="hidden items-center gap-10 md:flex">
-          {["Think", "Learn", "Create", "Ministry", "About"].map(
-            (item, index) => (
-              <button
-                key={item}
-                className={`relative text-sm transition ${
-                  index === 0
-                    ? "font-medium text-[#151827]"
-                    : "text-slate-600 hover:text-[#151827]"
-                }`}
-              >
-                {item}
-                {index === 0 && (
-                  <span className="absolute -bottom-3 left-0 h-[2px] w-full bg-[#d99b08]" />
-                )}
-              </button>
-            )
-          )}
-        </div>
+        <nav className="flex shrink-0 items-center gap-2 sm:gap-3">
+          <Link
+            href="/login"
+            className="rounded-full border border-[#14213d] px-4 py-2.5 text-xs font-bold transition hover:bg-[#14213d] hover:text-white sm:px-7 sm:text-sm"
+          >
+            Sign In
+          </Link>
 
-        <button className="rounded-full border border-[#d99b08] px-5 py-2.5 text-sm font-medium transition hover:bg-[#d99b08] hover:text-white">
-          Sign In
-        </button>
-      </nav>
+          <Link
+            href="/signup"
+            className="rounded-full bg-[#d6a72c] px-4 py-2.5 text-xs font-bold text-[#14213d] transition hover:bg-[#c3951e] sm:px-7 sm:text-sm"
+          >
+            Sign Up
+          </Link>
+        </nav>
+      </header>
 
       {/* Hero */}
-      <section className="relative mx-auto max-w-7xl px-6 pb-8 pt-12 md:px-12 md:pt-20">
-        {/* Soft background glow */}
-        <div className="pointer-events-none absolute left-1/2 top-10 -z-10 h-[500px] w-[700px] -translate-x-1/2 rounded-full bg-amber-100/60 blur-3xl" />
+      <section className="relative mx-auto max-w-7xl px-6 pb-16 pt-8 sm:px-10 lg:px-12 lg:pb-20 lg:pt-12">
+        {/* Background glow */}
+        <div className="pointer-events-none absolute left-1/2 top-0 -z-0 h-[480px] w-[700px] max-w-full -translate-x-1/2 rounded-full bg-amber-100/70 blur-3xl" />
 
-        <div className="grid items-center gap-10 lg:grid-cols-2">
-          {/* Hero copy */}
-          <div className="max-w-xl">
-            <div className="mb-5 flex items-center gap-3 text-xs font-medium tracking-[0.3em] text-slate-500">
+        <div className="relative grid items-center gap-5 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10">
+          {/* Headline */}
+          <div className="relative z-10 max-w-2xl">
+            <div className="mb-6 flex items-center gap-3 text-[10px] font-black tracking-[0.3em] text-[#52627d] sm:text-xs">
               <span>FAITH</span>
               <span>×</span>
               <span>IDEAS</span>
@@ -105,41 +79,44 @@ export default function Home() {
               <span>IMPACT</span>
             </div>
 
-            <h1 className="text-5xl font-bold leading-[0.98] tracking-tight md:text-7xl">
+            <h1 className="text-[clamp(3.1rem,7.5vw,6.3rem)] font-black leading-[0.91] tracking-[-0.055em]">
               Brighter
               <br />
               Ideas for a
               <br />
-              <span className="text-[#d39a10]">Bigger Tomorrow.</span>
+              <span className="text-[#d6a72c]">Bigger</span>
+              <br />
+              <span className="text-[#d6a72c]">Tomorrow.</span>
             </h1>
 
-            <p className="mt-7 max-w-lg text-lg leading-8 text-slate-600">
-              IDEABULB.AI helps you think deeper, learn faster, and create what
-              matters — for your purpose, your community, and a more just
-              world.
+            <p className="mt-7 max-w-xl text-base leading-7 text-[#52627d] sm:text-lg sm:leading-8">
+              IDEABULB.AI helps you explore questions, challenge assumptions,
+              discover new perspectives, and reflect on the ideas that matter
+              to you.
             </p>
           </div>
 
-          {/* Cross bulb */}
-          <div className="relative flex min-h-[390px] items-center justify-center">
-            <div className="absolute h-72 w-72 rounded-full bg-amber-200/30 blur-3xl" />
+          {/* Glowing bulb with cross */}
+          <div className="relative flex min-h-[280px] items-center justify-center sm:min-h-[390px]">
+            <div className="absolute h-64 w-64 rounded-full bg-amber-300/40 blur-3xl sm:h-80 sm:w-80" />
 
-            <div className="relative flex h-[290px] w-[220px] flex-col items-center">
-              {/* Glass bulb */}
-              <div className="relative h-[245px] w-[210px] rounded-[50%_50%_46%_46%] border-[5px] border-white/80 bg-white/25 shadow-[0_0_60px_rgba(231,174,35,0.35)] backdrop-blur-sm">
-                {/* Cross */}
-                <div className="absolute left-1/2 top-1/2 h-[150px] w-[28px] -translate-x-1/2 -translate-y-1/2 rounded-sm bg-[#ffd75c] shadow-[0_0_25px_rgba(255,190,40,0.95)]" />
+            <div className="relative flex h-[290px] w-[230px] flex-col items-center sm:scale-110">
+              {/* Glass */}
+              <div className="relative h-[220px] w-[205px] rounded-[50%_50%_46%_46%] border-[5px] border-white/90 bg-white/30 shadow-[0_0_65px_rgba(231,174,35,0.4)] backdrop-blur-sm sm:h-[245px] sm:w-[220px]">
+                {/* Vertical cross */}
+                <div className="absolute left-1/2 top-1/2 h-[125px] w-[27px] -translate-x-1/2 -translate-y-1/2 rounded-md bg-[#ffd75c] shadow-[0_0_28px_rgba(255,190,40,0.95)] sm:h-[145px]" />
 
-                <div className="absolute left-1/2 top-[43%] h-[28px] w-[125px] -translate-x-1/2 -translate-y-1/2 rounded-sm bg-[#ffd75c] shadow-[0_0_25px_rgba(255,190,40,0.95)]" />
+                {/* Horizontal cross */}
+                <div className="absolute left-1/2 top-[43%] h-[27px] w-[112px] -translate-x-1/2 -translate-y-1/2 rounded-md bg-[#ffd75c] shadow-[0_0_28px_rgba(255,190,40,0.95)] sm:w-[130px]" />
 
                 {/* Glass highlight */}
-                <div className="absolute left-8 top-10 h-24 w-5 rotate-[18deg] rounded-full bg-white/60 blur-sm" />
+                <div className="absolute left-8 top-8 h-20 w-5 rotate-[18deg] rounded-full bg-white/60 blur-sm" />
               </div>
 
-              {/* Bulb neck */}
+              {/* Neck */}
               <div className="-mt-2 h-8 w-24 rounded-b-lg bg-gradient-to-b from-[#e7b33a] to-[#b87900] shadow-lg" />
 
-              {/* Bulb screw */}
+              {/* Screw */}
               <div className="relative h-14 w-28">
                 {[0, 1, 2, 3].map((line) => (
                   <div
@@ -151,155 +128,146 @@ export default function Home() {
               </div>
 
               {/* Base */}
-              <div className="mt-1 h-4 w-36 rounded-full bg-[#d5ad52] shadow-xl" />
+              <div className="mt-1 h-3 w-36 rounded-full bg-[#d5ad52] shadow-xl" />
             </div>
           </div>
         </div>
 
-        {/* Idea input */}
+        {/* Main question box */}
         <form
           onSubmit={handleSubmit}
-          className="relative mx-auto mt-6 flex max-w-5xl items-center rounded-3xl border border-slate-200 bg-white p-2 shadow-[0_12px_45px_rgba(30,40,70,0.08)]"
+          className="relative z-10 mx-auto mt-5 flex max-w-5xl items-center gap-2 rounded-[2rem] border border-[#e8dfcc] bg-white/90 p-2 shadow-[0_12px_45px_rgba(30,40,70,0.08)] sm:mt-0 sm:gap-3 sm:p-3"
         >
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center text-2xl text-[#d99b08]">
+          <div className="flex h-11 w-10 shrink-0 items-center justify-center text-2xl text-[#d6a72c] sm:h-12 sm:w-12">
             💡
           </div>
 
           <input
+            aria-label="Your question or idea"
             value={idea}
-            onChange={(e) => setIdea(e.target.value)}
+            onChange={(event) => {
+              setIdea(event.target.value);
+              setError("");
+            }}
             placeholder="What's on your mind?"
-            className="h-12 flex-1 bg-transparent px-2 text-lg outline-none placeholder:text-slate-400"
+            className="h-12 min-w-0 flex-1 bg-transparent px-1 text-base text-[#14213d] outline-none placeholder:text-[#8b9ab2] sm:text-lg"
           />
 
           <button
             type="submit"
-            className="flex h-12 w-12 items-center justify-center rounded-full bg-[#f5c85a] text-2xl transition hover:scale-105 hover:bg-[#e9b52f]"
+            aria-label="Explore your idea"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#f8d98a] text-2xl text-[#14213d] transition hover:scale-105 hover:bg-[#d6a72c] sm:h-14 sm:w-14"
           >
             ↑
           </button>
         </form>
 
-        {/* Quick actions */}
-        <div className="mx-auto mt-5 grid max-w-5xl gap-4 md:grid-cols-3">
-          <ActionCard
-            title="Explore an Idea"
-            description="Discover new possibilities"
-            icon="✦"
-            style="purple"
+        {error && (
+          <p role="alert" className="mx-auto mt-3 max-w-5xl text-sm text-red-700">
+            {error}
+          </p>
+        )}
+
+        <p className="mt-5 text-center text-xs text-[#52627d] sm:text-sm">
+          Bring your questions. Explore what unfolds.
+        </p>
+      </section>
+
+      {/* Purpose */}
+      <section className="border-t border-[#14213d]/10 bg-white/50">
+        <div className="mx-auto grid max-w-7xl gap-8 px-6 py-12 sm:px-10 sm:py-16 md:grid-cols-3 lg:px-12">
+          <PurposeCard
+            number="01"
+            title="Explore"
+            description="Look beyond the obvious and discover new perspectives."
           />
 
-          <ActionCard
-            title="Challenge My Thinking"
-            description="Get a fresh perspective"
-            icon="↗"
-            style="teal"
+          <PurposeCard
+            number="02"
+            title="Question"
+            description="Challenge assumptions and make room for deeper thinking."
           />
 
-          <ActionCard
-            title="Create Something"
-            description="Turn ideas into action"
-            icon="✎"
-            style="orange"
+          <PurposeCard
+            number="03"
+            title="Reflect"
+            description="Connect your ideas to your experiences, values, and beliefs."
           />
         </div>
       </section>
 
-      {/* Main feature cards */}
-      <section className="mx-auto max-w-7xl px-6 py-8 md:px-12">
-        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
-          {features.map((feature) => (
-            <FeatureCard key={feature.title} {...feature} />
-          ))}
-        </div>
-      </section>
-
-      {/* Footer statement */}
-      <footer className="mx-auto flex max-w-7xl flex-col gap-6 px-6 pb-10 pt-6 md:flex-row md:items-end md:justify-between md:px-12">
-        <div className="border-l-2 border-[#e1ad2b] pl-5">
-          <p className="font-serif text-lg italic text-slate-700">
-            “For where your treasure is, there your heart will be also.”
+      {/* Footer */}
+      <footer className="mx-auto flex max-w-7xl flex-col gap-5 px-6 py-8 sm:px-10 md:flex-row md:items-center md:justify-between lg:px-12">
+        <div>
+          <p className="font-bold tracking-wide">
+            IDEA<span className="text-[#d6a72c]">BULB</span>.AI
           </p>
-          <p className="mt-2 text-xs tracking-[0.25em] text-slate-500">
-            MATTHEW 6:21
+          <p className="mt-1 text-xs tracking-wider text-[#52627d]">
+            THINK BEYOND THE PROMPT.
           </p>
         </div>
 
-        <div className="flex gap-6 text-xs tracking-[0.2em] text-slate-500">
-          <span>PEOPLE</span>
-          <span>IDEAS</span>
-          <span>PURPOSE</span>
-          <span>IMPACT</span>
+        <p className="text-sm text-[#52627d]">
+          Your questions matter. Your thinking matters.
+        </p>
+
+        <div className="flex gap-5 text-sm font-medium">
+          <Link href="/login" className="hover:text-[#b18a20]">
+            Sign In
+          </Link>
+          <Link href="/signup" className="hover:text-[#b18a20]">
+            Create Account
+          </Link>
         </div>
       </footer>
     </main>
   );
 }
 
-function ActionCard({
-  title,
-  description,
-  icon,
-  style,
-}: {
-  title: string;
-  description: string;
-  icon: string;
-  style: "purple" | "teal" | "orange";
-}) {
-  const styles = {
-    purple: "border-purple-200 bg-purple-50/70 text-purple-600",
-    teal: "border-teal-200 bg-teal-50/70 text-teal-600",
-    orange: "border-orange-200 bg-orange-50/70 text-orange-600",
-  };
-
+function BulbLogo() {
   return (
-    <button
-      className={`flex items-center gap-4 rounded-2xl border p-5 text-left transition hover:-translate-y-1 hover:shadow-lg ${styles[style]}`}
+    <svg
+      viewBox="0 0 48 56"
+      className="h-11 w-9 shrink-0"
+      fill="none"
+      role="img"
+      aria-label="IdeaBulb cross logo"
     >
-      <span className="text-2xl">{icon}</span>
-      <span className="flex-1">
-        <span className="block font-semibold text-slate-800">{title}</span>
-        <span className="text-sm text-slate-500">{description}</span>
-      </span>
-      <span className="text-xl">→</span>
-    </button>
+      <circle cx="24" cy="22" r="17" stroke="#d6a72c" strokeWidth="3" />
+      <path
+        d="M24 11V33M13 22H35"
+        stroke="#d6a72c"
+        strokeWidth="3"
+        strokeLinecap="round"
+      />
+      <path
+        d="M15 43H33M18 48H30M21 52H27"
+        stroke="#d6a72c"
+        strokeWidth="3"
+        strokeLinecap="round"
+      />
+    </svg>
   );
 }
 
-function FeatureCard({
+function PurposeCard({
+  number,
   title,
   description,
-  icon,
-  accent,
 }: {
+  number: string;
   title: string;
   description: string;
-  icon: string;
-  accent: string;
 }) {
-  const accents: Record<string, string> = {
-    purple: "text-purple-600 bg-purple-50",
-    gold: "text-amber-600 bg-amber-50",
-    teal: "text-teal-600 bg-teal-50",
-    rose: "text-rose-500 bg-rose-50",
-  };
-
   return (
-    <button className="group rounded-2xl border border-slate-200 bg-white p-6 text-left shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
-      <div
-        className={`mb-5 flex h-12 w-12 items-center justify-center rounded-xl text-2xl ${accents[accent]}`}
-      >
-        {icon}
-      </div>
+    <article className="rounded-2xl border border-[#14213d]/10 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md sm:p-7">
+      <p className="text-xs font-black tracking-[0.2em] text-[#c3951e]">
+        {number}
+      </p>
 
-      <h2 className="text-xl font-semibold">{title}</h2>
+      <h2 className="mt-3 text-2xl font-extrabold">{title}</h2>
 
-      <p className="mt-2 leading-6 text-slate-500">{description}</p>
-
-      <div className="mt-5 text-right text-slate-400 transition group-hover:translate-x-1">
-        →
-      </div>
-    </button>
+      <p className="mt-3 leading-7 text-[#52627d]">{description}</p>
+    </article>
   );
 }
