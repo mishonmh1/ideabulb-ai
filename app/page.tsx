@@ -48,6 +48,13 @@ export default function Home() {
 
         <nav className="flex shrink-0 items-center gap-2 sm:gap-3">
           <Link
+            href="/bible"
+            className="rounded-full px-3 py-2.5 text-xs font-bold text-[#14213d] transition hover:bg-[#14213d]/5 hover:text-[#b18a20] sm:px-5 sm:text-sm"
+          >
+            Bible
+          </Link>
+
+          <Link
             href="/login"
             className="rounded-full border border-[#14213d] px-4 py-2.5 text-xs font-bold transition hover:bg-[#14213d] hover:text-white sm:px-7 sm:text-sm"
           >

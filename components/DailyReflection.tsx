@@ -1,10 +1,11 @@
 
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 
 type DailyReflectionProps = {
   onChooseQuestion: (question: string) => void;
+  onDailyScriptureChange: (scripture: string) => void;
 };
 
 const spiritualQuestions = [
@@ -98,8 +99,13 @@ function getDailyQuestion() {
 
 export default function DailyReflection({
   onChooseQuestion,
+  onDailyScriptureChange,
 }: DailyReflectionProps) {
   const dailyReflection = useMemo(() => getDailyQuestion(), []);
+
+  useEffect(() => {
+    onDailyScriptureChange(dailyReflection.scripture);
+  }, [dailyReflection.scripture, onDailyScriptureChange]);
 
   const reflectionPrompt = [
     `Scripture: ${dailyReflection.scripture}`,
@@ -108,7 +114,7 @@ export default function DailyReflection({
   ].join("\n\n");
 
   return (
-    <section className="rounded-[2rem] border border-[#d6a72c]/30 bg-white p-7 shadow-sm sm:p-10">
+    <section className="h-full rounded-[2rem] border border-[#d6a72c]/30 bg-white p-7 shadow-sm sm:p-10">
       <p className="text-xs font-black uppercase tracking-[0.2em] text-[#8b6b11]">
         Daily Spiritual Reflection
       </p>
@@ -119,7 +125,7 @@ export default function DailyReflection({
 
       <div className="mt-7 rounded-2xl bg-[#f8f5ed] p-5 sm:p-6">
         <p className="text-xs font-black uppercase tracking-[0.15em] text-[#8b6b11]">
-          Today's Scripture
+          Today&apos;s Scripture
         </p>
 
         <p className="mt-2 text-xl font-black">
@@ -127,7 +133,7 @@ export default function DailyReflection({
         </p>
 
         <p className="mt-5 text-xs font-black uppercase tracking-[0.15em] text-[#8b6b11]">
-          Today's Question
+          Today&apos;s Question
         </p>
 
         <h3 className="mt-2 text-2xl font-bold leading-snug">
@@ -142,7 +148,7 @@ export default function DailyReflection({
       <p className="mt-5 text-sm leading-6 text-[#14213d]/65">
         Take a few minutes to read the passage. Notice what stands out,
         what challenges you, and what questions you still have.
-        You don't need to have every answer.
+        You don&apos;t need to have every answer.
       </p>
 
       <button

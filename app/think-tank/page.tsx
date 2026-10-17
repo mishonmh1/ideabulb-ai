@@ -1,6 +1,6 @@
 
 "use client";
-
+import MiniBible from "@/components/MiniBible";
 import { useCallback, useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import DailyReflection from "@/components/DailyReflection";
@@ -336,10 +336,18 @@ export default function ThinkTankPage() {
           </p>
         </div>
 
-        {/* DAILY REFLECTION AND TOPIC LIBRARY */}
-        <div className="mt-10">
-          <DailyReflection onChooseQuestion={chooseQuestion} />
-        </div>
+      
+{/* DAILY REFLECTION AND MINI BIBLE */}
+<div className="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-2">
+  <DailyReflection
+  onChooseQuestion={chooseQuestion}
+  onDailyScriptureChange={() => {}}
+/>
+
+  <MiniBible initialReference="Luke 10:25–37" />
+</div>
+
+
 
         {/* DAILY REFLECTION EDITOR */}
         {selectedQuestion && (

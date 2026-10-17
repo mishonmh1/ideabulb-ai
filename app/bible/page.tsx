@@ -55,6 +55,49 @@ export default async function BiblePage({
   return (
     <main className="min-h-screen bg-[#f8f5ed] px-4 py-8 text-[#14213d] sm:px-8">
       <div className="mx-auto max-w-4xl">
+        <nav
+          aria-label="Main navigation"
+          className="mb-8 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[#14213d]/10 bg-white/80 p-3 shadow-sm"
+        >
+          <a
+            href="/"
+            className="px-3 py-2 text-sm font-extrabold tracking-wide text-[#14213d] hover:text-[#b58b18]"
+          >
+            IdeaBulb<span className="text-[#d6a72c]">.AI</span>
+          </a>
+
+          <div className="flex flex-wrap items-center gap-2">
+            <a
+              href="/"
+              className="rounded-full px-3 py-2 text-sm font-semibold text-[#14213d] hover:bg-[#f8f5ed]"
+            >
+              Home
+            </a>
+
+            <a
+              href="/think-tank"
+              className="rounded-full px-3 py-2 text-sm font-semibold text-[#14213d] hover:bg-[#f8f5ed]"
+            >
+              Think Tank
+            </a>
+
+            <a
+              href="/bible"
+              aria-current="page"
+              className="rounded-full bg-[#d6a72c]/20 px-3 py-2 text-sm font-bold text-[#14213d]"
+            >
+              Bible
+            </a>
+
+            <a
+              href="/profile"
+              className="rounded-full px-3 py-2 text-sm font-semibold text-[#14213d] hover:bg-[#f8f5ed]"
+            >
+              My Profile
+            </a>
+          </div>
+        </nav>
+
         <header className="mb-8 border-b border-[#d6a72c]/40 pb-6">
           <p className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-[#b58b18]">
             IdeaBulb Library

@@ -1,4 +1,5 @@
-﻿"use client";
+﻿
+"use client";
 
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
@@ -51,6 +52,13 @@ export default function AccountMenu() {
         className="rounded-full px-3 py-2 text-xs font-bold text-[#14213d] hover:bg-white"
       >
         Think Tank
+      </a>
+
+      <a
+        href="/bible"
+        className="rounded-full bg-[#d6a72c]/15 px-3 py-2 text-xs font-bold text-[#14213d] hover:bg-[#d6a72c]/30"
+      >
+        Bible
       </a>
 
       {!checked ? (
