@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState, type FormEvent } from "react";
@@ -52,6 +51,11 @@ const thinkingSteps = [
 
 export default function ThinkPage() {
   const [idea, setIdea] = useState("");
+  const [bibleReference, setBibleReference] = useState("");
+  const [bibleScripture, setBibleScripture] = useState("");
+  const [bibleTranslation, setBibleTranslation] = useState("");
+  const [biblePrompt, setBiblePrompt] = useState("");
+
   const [thinking, setThinking] = useState<ThinkingResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [selectedQuestion, setSelectedQuestion] = useState("");
@@ -68,7 +72,32 @@ export default function ThinkPage() {
   const [saveMessage, setSaveMessage] = useState("");
   const [showSignInPrompt, setShowSignInPrompt] = useState(false);
 
+  // Bible reader and homepage handoff.
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const source = params.get("source");
+    const reference = params.get("reference") ?? "";
+    const scripture = params.get("scripture") ?? "";
+    const translation = params.get("translation") ?? "";
+    const bibleStudyPrompt = params.get("prompt") ?? "";
+
+    if (source === "bible" && bibleStudyPrompt.trim()) {
+      setBibleReference(reference);
+      setBibleScripture(scripture);
+      setBibleTranslation(translation);
+      setBiblePrompt(bibleStudyPrompt);
+
+      const displayIdea = reference
+        ? `Explore ${reference}`
+        : "Explore a Bible passage";
+
+      window.history.replaceState({}, "", window.location.pathname);
+      setIdea(displayIdea);
+      void thinkWithMe(bibleStudyPrompt, displayIdea);
+      return;
+    }
+
+    // Preserve the existing homepage-to-Think workflow.
     const savedIdea = sessionStorage.getItem("ideabulb_home_idea");
 
     if (!savedIdea?.trim()) return;
@@ -81,12 +110,13 @@ export default function ThinkPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  async function thinkWithMe(prompt?: string) {
+  async function thinkWithMe(prompt?: string, displayIdea?: string) {
     const ideaToThink = (prompt ?? idea).trim();
+    const visibleIdea = (displayIdea ?? ideaToThink).trim();
 
     if (!ideaToThink || loading) return;
 
-    setIdea(ideaToThink);
+    setIdea(visibleIdea);
     setLoading(true);
     setSafetyNotice(null);
     setVisionRedirect(null);
@@ -265,6 +295,10 @@ export default function ThinkPage() {
 
   function resetThinkSession() {
     setIdea("");
+    setBibleReference("");
+    setBibleScripture("");
+    setBibleTranslation("");
+    setBiblePrompt("");
     setThinking(null);
     setSelectedQuestion("");
     setReflection("");
@@ -337,9 +371,7 @@ export default function ThinkPage() {
       sessionStorage.removeItem("ideabulb_pending_think_tank_entry");
     } catch (error) {
       console.error(error);
-      setSaveMessage(
-        "Something went wrong while saving. Please try again."
-      );
+      setSaveMessage("Something went wrong while saving. Please try again.");
     } finally {
       setSaveLoading(false);
     }
@@ -399,6 +431,21 @@ export default function ThinkPage() {
           onSubmit={handleSubmit}
           className="mx-auto mt-10 max-w-3xl rounded-[2rem] border border-[#14213d]/10 bg-white p-4 shadow-[0_20px_70px_rgba(20,33,61,0.08)]"
         >
+          {bibleReference && (
+            <div className="mb-4 rounded-2xl border border-[#d6a72c]/40 bg-white/70 p-5 text-left">
+              <p className="mb-2 text-sm font-semibold uppercase tracking-wider text-[#14213d]/65">
+                Scripture for exploration
+              </p>
+              <h2 className="mb-1 text-xl font-bold text-[#14213d]">
+                {bibleReference}
+              </h2>
+              <p className="mb-3 text-sm text-[#14213d]/60">
+                {bibleTranslation}
+              </p>
+              <p className="leading-7 text-[#14213d]">{bibleScripture}</p>
+            </div>
+          )}
+
           <textarea
             value={idea}
             onChange={(event) => setIdea(event.target.value)}
